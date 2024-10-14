@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>Your Cart</title>
+{% endblock %}
+{% block content %}
+<div class="cart">
+    {% if cart %}
+        <div class="cart-filled">
+            <h1 class="title">Your Card :</h1>
+            <div class="products">
+                {% for product in products %}
+                    <div class="product">
+                        <div class="img">
+                            <a class="product-img active" href="{{product.0.images.first.image.url}}"><img src="{{ product.0.images.first.image.url }}" alt=""></a>
+                            {% if product.0.images.all|slice:"1:" %}
+                                {% for image in product.0.images.all|slice:"1:" %}
+                                    <a class="product-img" href="{{ image.image.url }}"><img src="{{ image.image.url }}" alt=""></a>
+                                {% endfor %}
+                            {% endif %}
+                            <i class="fa-solid fa-arrow-right" id="btn-right"></i>
+                            <i class="fa-solid fa-arrow-left" id="btn-left"></i>
+                        </div>
+                        <div class="product-infos">
+                            <h2 class="product-name">{{ product.0.name }}</h2>
+                            <h4 class="product-price">Price: {{ product.0.price }} DA</h4>
+                            <div class="size">Size: {{product.1}}</div>
+                            <label for="quantity">Enter quantity :</label>
+                            <input type="number" id="quantity" class="quantity" value="{{ product.2 }}" min="1" step="1" product-key="{{product.3}}">
+                            <div class="remove-from-cart" product-key="{{product.3}}">
+                                <p>Remove from Cart</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'checkout' %}" class="checkout-btn">Check Out</a>
+        </div>
+    {% else %}
+        <div class="empty-cart">Your Cart is Empty !!</div>
+    {% endif %}
+</div>
+<script>
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.cart').css('padding-top', `${nav.clientHeight + 16}px`);
+// For Product Image
+var counter_list = [];
+var products_list = [];
+document.addEventListener('DOMContentLoaded', function() {
+    let products = $(".product");
+    for(let i=0; i<products.length; i++){
+        if(products.eq(i).find('.img').children('.product-img').length > 1){
+            products_list.push(products.eq(i));
+            counter_list.push(0);
+            
+        }
+        else{
+            products.eq(i).find('.img i').remove();
+        }
+    }
+    for(let i=0; i< products_list.length; i++){
+        products_list[i].on('click', '#btn-right', function(){
+            var counter = counter_list[i];
+            var images = $(this).siblings('.product-img');
+            images.eq(counter).css('animation', 'next1 0.5s ease forwards');
+            if(counter>=images.length-1) counter = 0;
+            else counter++;
+            images.eq(counter).css('animation', 'next2 0.5s ease forwards');;
+            counter_list[i] = counter;
+        });
+        products_list[i].on('click', '#btn-left', function(){
+            var counter = counter_list[i];
+            var images = $(this).siblings('.product-img');
+            images.eq(counter).css('animation', 'prev1 0.5s ease forwards');
+            if(counter == 0) counter = images.length-1;
+            else counter--;
+            images.eq(counter).css('animation', 'prev2 0.5s ease forwards');;
+            counter_list[i] = counter;
+        });
+    }
+});
+// Check Validity Of Quantity Input
+$(".product").on('keyup', '#quantity', function(){
+    if( $(this).val() == '' ){}
+    else if( $(this)[0].checkValidity() ){
+        my_data = {
+            product_key : $(this).attr("product-key"),
+            quantity : $(this).val(),
+        }
+        $.ajax({
+            url : "{% url 'update-cart' %}",
+            type : "POST",
+            data : my_data,
+            success : function(response){
+            }
+        });
+        
+    }
+    else{
+        $(this)[0].reportValidity();
+    }
+});
+// Remove Product From Cart
+$(".product").on('click', '.remove-from-cart', function(){
+    my_data = {
+        product_key : $(this).attr("product-key"),
+    }
+    $.ajax({
+        url : "{% url 'remove-product' %}",
+        type : "POST",
+        data : my_data,
+        success : function(response){
+            $("#cart-length span").html(`${ Number($("#cart-length span").html()) - 1 }`)
+        }
+    });
+    $(this).parent().parent().remove();
+    if( $(".product").length == 0 ) $(".checkout-btn").remove();
+    
+});
+</script>
+{% endblock %}

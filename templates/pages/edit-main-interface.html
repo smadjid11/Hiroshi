@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Edit Main Interface</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="main-interface">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-part">
+                <label for="title">New Title :</label>
+                <div class="input-wrapper">
+                    {{TitleForm.title}}
+                    <div class="before"></div>
+                </div>
+            </div>
+            <div class="form-part">
+                <label for="slide">Add New Slides :</label>
+                <input type="file" name="slide" class="slide" id="slide" accept="image/*" multiple>
+            </div>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+{% else %}
+    <div class="main-interface">
+        <h1 class="not_authenticated">You are not Login !</h1>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.main-interface').css('padding-top', `${nav.clientHeight + 16}px`);
+// 
+</script>
+{% endblock %}

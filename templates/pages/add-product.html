@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Add Product</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="add-product">
+        <div class="title">Add New Product</div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-part">
+                <label for="category">Product Category :</label>
+                <!-- <select name="category" class="category" id="category"></select> -->
+                {{ProductForm.category}}
+            </div>
+            <div class="form-part">
+                <label for="name">Name :</label>
+                <!-- <input type="text" name="name" class="name" id="name"> -->
+                {{ProductForm.name}}
+            </div>
+            <div class="form-part">
+                <label for="price">Price :</label>
+                <!-- <input type="number" name="price" class="price" id="price"> -->
+                {{ProductForm.price}}
+            </div>
+            <div class="form-part">
+                <label for="price">Sizes :</label>
+                {{ProductForm.sizes}}
+            </div>
+            <div class="form-part">
+                <label for="images">Product Images :</label>
+                <input type="file" name="images" id="images" class="images" accept="image/*" multiple required>
+            </div>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+{% else %}
+    <div class="add-product">
+        <h1 class="not_authenticated">You are not Login !</h1>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.add-product').css('padding-top', `${nav.clientHeight + 16}px`);
+// 
+</script>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-slide">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="message">
+                        <p>{{message}}</p>
+                        <i class="fa-solid fa-x"></i>
+                    </div>
+                {% else %}
+                    <div class="message" id="error-message">
+                        <p>{{message}}</p>
+                        <i class="fa-solid fa-x"></i>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="slides">
+        {% if first_image %}
+            <img src="{{first_image.image.url}}" class="active" alt="">
+        {% endif %}
+        {% if rest_images %}
+            {% for rest_image in rest_images %}
+                <img src="{{rest_image.image.url}}" alt="">
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="btns">
+        <div class="content">
+            <h1 class="title">{{title}}</h1>
+            <a href="#view_products" class="see-products">
+                <p>See Products</p>
+                <i class="fa-solid fa-arrow-down" ></i>
+            </a>
+        </div>
+        <i class="fa-solid fa-arrow-right" id="btn-right" onclick="right()"></i>
+        <i class="fa-solid fa-arrow-left" id="btn-left" onclick="left()"></i>
+    </div>
+    
+</div>
+<div class="products" id="view_products">
+    <div class="categories">
+            <div class="category" id="All">All</div>
+            {% for category in categories %}
+                <div class="category Category" category="{{category.name}}">{{category.name}}</div>
+            {% endfor %}
+    </div>
+    {% if products %}
+        <div class="products-content">
+            {% for product in products %}
+                <div class="product" product-category="{{product.0.category.name}}" style="opacity: 0;">
+                    <div class="img">
+                        <a class="product-img active" href="{{product.0.images.first.image.url}}"><img src="{{ product.0.images.first.image.url }}" alt=""></a>
+                        {% if product.0.images.all|slice:"1:" %}
+                            {% for image in product.0.images.all|slice:"1:" %}
+                                <a class="product-img" href="{{ image.image.url }}"><img src="{{ image.image.url }}" alt=""></a>
+                            {% endfor %}
+                        {% endif %}
+                        <i class="fa-solid fa-arrow-right" id="btn-right"></i>
+                        <i class="fa-solid fa-arrow-left" id="btn-left"></i>
+                    </div>
+                    <div class="product-infos">
+                        <h2 class="product-name">{{ product.0.name }}</h2>
+                        <h4 class="product-price">{{ product.0.price }} DA</h4>
+                        {% if 'OUT OF STOCK' in product.1 %}
+                            <div style="font-weight: 900; color: #ff0000;">OUT OF STOCK</div>
+                        {% else %}
+                            <label for="size" id="">Available sizes:</label>
+                            <select name="select_size" id="select_size">
+                                {% for size in product.0.sizes.all %}
+                                    <option value="{{size}}">{{size}}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="add-to-cart" product-id="{{product.0.id}}">
+                                <p>Add to Cart</p>
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<script type="text/javascript">
+
+
+var images = document.querySelectorAll(".slides img");
+var counter = 0;
+function right(){
+images[counter].style.animation = 'next1 0.5s ease forwards';
+if(counter>=images.length-1) counter = 0;
+else counter++;
+images[counter].style.animation = 'next2 0.5s ease forwards';
+}
+function left(){
+images[counter].style.animation = 'prev1 0.5s ease forwards';
+if(counter==0) counter = (images.length-1);
+else counter--;
+images[counter].style.animation = 'prev2 0.5s ease forwards';
+}
+setInterval(right, 5000);
+// For Scroll Navbar
+var nav = document.querySelector("nav");
+window.onscroll = function(){
+    // For Nav
+    opacity = window.scrollY / window.innerHeight;
+    if(opacity > 1) opacity = 1;
+    nav.style.backgroundColor = `rgba(255, 255, 255, ${opacity})`;
+    // For Products
+    var products = document.querySelectorAll(".product");
+    for(let i=0; i<products.length; i++){
+        if(window.scrollY + window.innerHeight >= products[i].offsetTop + 10){
+            products[i].style.animation = 'show-up 1.5s ease forwards';
+        }
+    }
+};
+// For Choose Category
+$("#All").css('color', '#fff');
+$("#All").css('--before-width', '100%');
+$(".categories").on("click", ".category", function(){
+    console.log("CLICKED");
+    $(this).siblings().css("color", '#000');
+    $(this).siblings().css("--before-width", '0');
+    $(this).css("color", "#fff");
+    $(this).css("--before-width", "100%");
+});
+// For Product Image
+var counter_list = [];
+var products_list = [];
+document.addEventListener('DOMContentLoaded', function() {
+    let products = $(".product");
+    for(let i=0; i<products.length; i++){
+        if(products.eq(i).find('.img').children('.product-img').length > 1){
+            products_list.push(products.eq(i));
+            counter_list.push(0);
+            
+        }
+        else{
+            products.eq(i).find('.img i').remove();
+        }
+    }
+    for(let i=0; i< products_list.length; i++){
+        products_list[i].on('click', '#btn-right', function(){
+            var counter = counter_list[i];
+            var images = $(this).siblings('.product-img');
+            images.eq(counter).css('animation', 'next1 0.5s ease forwards');
+            if(counter>=images.length-1) counter = 0;
+            else counter++;
+            images.eq(counter).css('animation', 'next2 0.5s ease forwards');;
+            counter_list[i] = counter;
+        });
+        products_list[i].on('click', '#btn-left', function(){
+            var counter = counter_list[i];
+            var images = $(this).siblings('.product-img');
+            images.eq(counter).css('animation', 'prev1 0.5s ease forwards');
+            if(counter == 0) counter = images.length-1;
+            else counter--;
+            images.eq(counter).css('animation', 'prev2 0.5s ease forwards');;
+            counter_list[i] = counter;
+        });
+    }
+});
+// For Click In Categories
+// for all
+$(".categories").on("click", "#All", function(){
+    products = $(".product");
+    for(let i=0; i<products.length; i++){
+        products.eq(i).show();
+    }
+});
+// for each category
+$(".categories").on("click", ".Category", function(){
+    console.log()
+    products = $(".product");
+    for(let i=0; i<products.length; i++){
+        if (products.eq(i).attr("product-category") == $(this).attr("category")){
+            products.eq(i).show();
+        }
+        else{
+            products.eq(i).hide();
+        }
+    }
+});
+// For Add To Cart
+$(".product").on('click', '.add-to-cart', function(){
+    my_data = {
+        product_id : $(this).attr('product-id'),
+        size : $(this).siblings('#select_size').val(),
+    }
+    $.ajax({
+        url : "{% url 'add-cart' %}",
+        type : 'POST',
+        data : my_data,
+        success : function(response){
+            if(response.product_quantity == 1){
+                console.log($("#cart-length span").html());
+                $("#cart-length span").html(`${ Number($("#cart-length span").html()) + 1 }`)
+            }
+        }
+    });
+});
+// For Remove Message
+$(".message").on('click', 'i', function(){
+    $(this).parent().remove();
+    $(this).parent().parent().remove();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Login</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="login">
+        <h1>You are Already Login !</h1>
+    </div>
+{% else %}
+    <div class="login">
+        <div class="title">Account Log in</div>
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            <div class="form-part">
+                <label for="username">Username :</label>
+                <div class="input-wrapper">
+                    <!-- <input type="text" name="username" class="username" id="username"> -->
+                    {{UserLoginForm.username}}
+                    <div class="before"></div>
+                </div>
+            </div>
+            <div class="form-part">
+                <label for="password">Password :</label>
+                <div class="input-wrapper">
+                    {{UserLoginForm.password}}
+                    <div class="before"></div>
+                </div>
+            </div>
+            <button type="submit" id="login-btn">Login</button>
+        </form>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.cart').css('padding-top', `${nav.clientHeight + 16}px`);
+</script>
+{% endblock %}

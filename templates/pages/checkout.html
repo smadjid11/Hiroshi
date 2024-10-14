@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Checkout</title>
+{% endblock %}
+
+{% block content %}
+<div class="checkout">
+    {% if products %}
+        <form method="POST" class="checkout-filled">
+            {% csrf_token %}
+            <div class="your-order">
+                <h1 class="title">Your Order</h1>
+                <div class="products">
+                    <h3 class="products-header">
+                        <p>Product</p>
+                        <p>Subtotal</p>
+                    </h3>
+                    <hr>
+                    {% for product in products %}
+                        <div class="product">
+                            <div class="product-infos">
+                                <div class="product-name">{{product.0.name|slice:":25"}}</div>
+                                <div class="product-quantity">Quantity : <span>{{product.2}}</span></div>
+                                <div class="product-size">Size : <span>{{product.1}}</span></div>
+                            </div>
+                            <div class="product-total">{{product.3}} DA</div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                </div>
+                <div class="subtotal">
+                    <p>SUBTOTAL</p>
+                    <p id="subtotal_price"><span>{{subtotal}}</span> DA</p>
+                </div>
+                <hr>
+                <div class="total">
+                    <p>TOTAL</p>
+                    <p id="total_price">4000 DA</p>
+                </div>
+                <hr>
+                <div class="shipping">
+                    <h1 class="title">Shipping</h1>
+                    <div class="shipping-choices">
+                        <div class="shipping-choice yalidine-shopping">
+                            <label name="delivery" id="yalidine">
+                                <input type="radio" name="shipping" id="yalidine" value="Yalidine" checked>
+                                Yalidine
+                            </label>
+                            <div class="choice-price"><span>400</span> DA</div>
+                        </div>
+                        <div class="shipping-choice domicile-shopping">
+                            <label name="delivery" id="domicile">
+                                <input type="radio" name="shipping" id="domicile" value="Domicile">
+                                Domicile
+                            </label>
+                            <div class="choice-price"><span>400</span> DA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order-form">
+                <div class="title">Enter Your Informations :</div>
+                <div class="form-part">
+                    <label for="full_name">Full Name :</label>
+                    <input type="text" name="full_name" class="full_name" id="full_name" required>
+                </div>
+                <div class="form-part">
+                    <label for="phone_number">Phone Number :</label>
+                    <input type="text" name="phone_number" class="phone_number" id="phone_number" required maxlength="10" oninput="validateInput(this)">
+                </div>
+                <div class="form-part">
+                    <label for="wilaya">Wilaya :</label>
+                    <select type="text" name="wilaya" class="wilaya" id="wilaya" required>
+                        <option value="Alger" selected>Alger</option>
+                        <option value="Blida">Blida</option>
+                        <option value="Boumerdès">Boumerdès</option>
+                        <option value="Tipaza">Tipaza</option>
+                        <option value="Chlef">Chlef</option>
+                        <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                        <option value="Batna">Batna</option>
+                        <option value="Béjaïa">Béjaïa</option>
+                        <option value="Bouira">Bouira</option>
+                        <option value="Tlemcen">Tlemcen</option>
+                        <option value="Tiaret">Tiaret</option>
+                        <option value="Tizi Ouzou">Tizi Ouzou</option>
+                        <option value="Jijel">Jijel</option>
+                        <option value="Sétif">Sétif</option>
+                        <option value="Saïda">Saïda</option>
+                        <option value="Skikda">Skikda</option>
+                        <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                        <option value="Annaba">Annaba</option>
+                        <option value="Guelma">Guelma</option>
+                        <option value="Constantine">Constantine</option>
+                        <option value="Médéa">Médéa</option>
+                        <option value="Mostaganem">Mostaganem</option>
+                        <option value="M'Sila">M'Sila</option>
+                        <option value="Mascara">Mascara</option>
+                        <option value="Oran">Oran</option>
+                        <option value="Bordj Bou Arreridj">Bordj Bou Arreridj</option>
+                        <option value="El Tarf">El Tarf</option>
+                        <option value="Tissemsilt">Tissemsilt</option>
+                        <option value="Khenchela">Khenchela</option>
+                        <option value="Souk Ahras">Souk Ahras</option>
+                        <option value="Mila">Mila</option>
+                        <option value="Aïn Defla">Aïn Defla</option>
+                        <option value="Aïn Témouchent">Aïn Témouchent</option>
+                        <option value="Relizane">Relizane</option>
+                        <option value="Laghouat">Laghouat</option>
+                        <option value="Biskra">Biskra</option>
+                        <option value="Tébessa">Tébessa</option>
+                        <option value="Djelfa">Djelfa</option>
+                        <option value="Ouargla">Ouargla</option>
+                        <option value="El Oued">El Oued</option>
+                        <option value="Ghardaïa">Ghardaïa</option>
+                        <option value="Adrar">Adrar</option>
+                        <option value="Béchar">Béchar</option>
+                        <option value="El Bayadh">El Bayadh</option>
+                        <option value="Naâma">Naâma</option>
+                        <option value="Tamanrasset">Tamanrasset</option>
+                        <option value="Illizi">Illizi</option>
+                        <option value="Tindouf">Tindouf</option>
+                    </select>
+                </div>
+                <div class="form-part" id="maktab-part">
+                    <label for="maktab">المكتب :</label>
+                    <select name="maktab" class="maktab" id="maktab" required>
+                        <option value="Agence de Aïn Benian">Agence de Aïn Benian</option>
+                        <option value="Sacré-Cœur">Sacré-Cœur</option>
+                        <option value="Agence de Bab El Oued">Agence de Bab El Oued</option>
+                        <option value="Agence de Baraki">Agence de Baraki</option>
+                        <option value="Agence de Birkhadem">Agence de Birkhadem</option>
+                        <option value="Agence de Birtouta">Agence de Birtouta</option>
+                        <option value="Agence Bordj El Bahri">Agence Bordj El Bahri</option>
+                        <option value="Agence de Bordj El Kiffan">Agence de Bordj El Kiffan</option>
+                        <option value="Dar Diaf">Dar Diaf</option>
+                        <option value="Agence d'El Hamiz">Agence d'El Hamiz</option>
+                        <option value="Agence de Douera">Agence de Douera</option>
+                        <option value="Agence de Draria">	Agence de Draria</option>
+                        <option value="Hussein Dey">Hussein Dey</option>
+                        <option value="Agence Les Eucalyptus">Agence Les Eucalyptus</option>
+                        <option value="Agence de Ouled Fayet">Agence de Ouled Fayet</option>
+                        <option value="Agence de DNC">Agence de DNC</option>
+                        <option value="Agence de Signa">Agence de Signa</option>
+                        <option value="Agence de Rouiba">Agence de Rouiba</option>
+                        <option value="Agence de Zeralda">Agence de Zeralda</option>
+                    </select>
+                </div>
+                <div class="form-part" id="township-part" style="display: none;">
+                    <label for="township">البلدية :</label>
+                    <input type="text" name="township" class="township" id="township">
+                </div>
+                <div class="form-part" id="adress-part" style="display: none;">
+                    <label for="adress">Adress :</label>
+                    <input type="text" name="adress" class="adress" id="adress">
+                </div>
+                <button type="submit">Place Order</button>
+                <div class="note">
+                    <h3>ملاحظة :</h3>
+                    <p>مدة التوصيل من 3أيام إلى 5أيام كحد أقصى..</p>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="empty-checkout">Your Cart is Empty !!</div>
+    {% endif %}
+</div>
+
+<script>
+// Fot Total
+$("#total_price").html(`${ parseInt($("#subtotal_price span").html()) + 400} DA`);
+// For Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.checkout').css('padding-top', `${nav.clientHeight + 16}px`);
+</script>
+
+<script>
+$("form").on('change', '#wilaya', function(){
+    my_data = {
+        wilaya_name : $(this).val(),
+    }
+    $.ajax({
+        url : "{% url 'update-wilaya' %}",
+        type : "POST",
+        data : my_data,
+        success : function(response){
+            yalidine_price = response.yalidine_price;
+            domicile_price = response.domicile_price;
+            makatib = response.makatib;
+            var selected_delivery = $('input[name="shipping"]:checked').val();
+            $(".yalidine-shopping .choice-price").html(`<span>${yalidine_price}</span> DA`);
+            $(".domicile-shopping .choice-price").html(`<span>${domicile_price}</span> DA`);
+            if(selected_delivery == 'Yalidine'){
+                $("#total_price").html(`${ parseInt($(".yalidine-shopping .choice-price span").html()) + parseInt($("#subtotal_price span").html())} DA`);
+            }
+            else{
+                $("#total_price").html(`${ parseInt($(".domicile-shopping .choice-price span").html()) + parseInt($("#subtotal_price span").html())} DA`);
+            }
+            output = '';
+            for(let i=0; i<makatib.length; i++){
+                output += `<option value="${makatib[i].name}">${makatib[i].name}</option>`;
+            }
+                $("#maktab").html(output);
+        }
+    });
+});
+
+$('input[name="shipping"]').change(function(){
+    var selected_value = $('input[name="shipping"]:checked').val();
+    if (selected_value == 'Yalidine'){
+        $("#township-part").hide();
+        $("#township-part input").removeAttr("required");
+        $("#adress-part").hide();
+        $("#adress-part input").removeAttr("required");
+        $("#maktab-part").show();
+        $("#maktab-part input").attr("required", true);
+        // For Total Price
+        $("#total_price").html(`${ parseInt($(".yalidine-shopping .choice-price span").html()) + parseInt($("#subtotal_price span").html())} DA`);
+    }
+    else{
+        $("#township-part").show();
+        $("#township-part input").attr("required", true);
+        $("#adress-part").show();
+        $("#adress-part input").attr("required", true);
+        $("#maktab-part").hide();
+        $("#maktab-part input").removeAttr("required");
+        // For Total Price
+        $("#total_price").html(`${ parseInt($(".domicile-shopping .choice-price span").html()) + parseInt($("#subtotal_price span").html())} DA`);
+    }
+});
+// For Phone Number Input
+function validateInput(input){
+  input.value = input.value.replace(/[^0-9]/g, '');
+}
+</script>
+{% endblock %}

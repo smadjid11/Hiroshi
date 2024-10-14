@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Update Sizes</title>
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class="update-product-sizes">
+        <h1 class="title">Edit Product Sizes :</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="sizes">This Product Sizes :</label>
+            {{update_product_sizes.sizes}}
+            <button type="submit">Update Sizes</button>
+        </form>
+    </div>
+{% else %}
+    <div class="update-product-sizes">
+            <h1 class="not_authenticated">You are not Login !</h1>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.update-sizes').css('padding-top', `${nav.clientHeight + 16}px`);
+</script>
+{% endblock %}

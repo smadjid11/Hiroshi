@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Add Product</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="view-orders">
+        {% if orders %}
+            <div class="title">All Orders :</div>
+            <div class="orders-container">
+                <div class="table-wrapper">
+                    <table id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Phone Number</th>
+                                <th>Delivery</th>
+                                <th>Wilaya</th>
+                                <th>Desktop</th>
+                                <th>Township</th>
+                                <th>Address</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>{{order.full_name}}</td>
+                                    <td>{{order.phone_number}}</td>
+                                    <td>{{order.delivery}}</td>
+                                    <td>{{order.wilaya}}</td>
+                                    {% if order.delivery == 'Domicile' %}
+                                        <td>------------</td>
+                                        <td>{{order.township}}</td>
+                                        <td>{{order.adress}}</td>
+                                    {% else %}
+                                        <td>{{order.desktop}}</td>
+                                        <td>------------</td>
+                                        <td>------------</td>
+                                    {% endif %}
+                                    <td>{{order.total}} DA</td>
+                                    <td><a href="{% url 'order' order.id %}" class="show-btn">Show Order</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <h1 class="not_authenticated">There's no Orders</h1>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="view-orders">
+        <h1 class="not_authenticated">You are not Login !</h1>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.view-orders').css('padding-top', `${nav.clientHeight + 16}px`);
+// 
+</script>
+{% endblock %}

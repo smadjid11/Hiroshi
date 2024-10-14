@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Control</title>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="control">
+    <div class="title">Edit your Website</div>
+    <div class="services">
+        <div class="service" id="title-slides">
+            <div class="img-wrapper"><img src="{% static 'images/main_interface.png' %}" alt=""></div>
+            <div class="service-txts">
+                <p>Edit main interface</p>
+                <a href="{% url 'edit-main-interface' %}" class="service-btn">Edit</a>
+            </div>
+        </div>
+
+        <div class="service" id="views-orders">
+            <div class="img-wrapper"><img src="{% static 'images/orders.jpg' %}" alt=""></div>
+            <div class="service-txts">
+                <p>View Orders</p>
+                <a href="{% url 'view-orders' %}" class="service-btn">View</a>
+            </div>
+        </div>
+
+        <div class="service" id="add-product">
+            <div class="img-wrapper"><img src="{% static 'images/add_product.png' %}" alt=""></div>
+            <div class="service-txts">
+                <p>Add Product</p>
+                <a href="{% url 'add-product' %}" class="service-btn">Add</a>
+            </div>
+        </div>
+
+        <div class="service" id="update-sizes">
+            <div class="img-wrapper"><img src="{% static 'images/update_sizes.jpg' %}" alt=""></div>
+            <div class="service-txts">
+                <p>Update Sizes</p>
+                <a href="{% url 'update-sizes' %}" class="service-btn">Update</a>
+            </div>
+        </div>
+
+        <div class="service" id="delete-product">
+            <div class="img-wrapper"><img src="{% static 'images/products.png' %}" alt=""></div>
+            <div class="service-txts">
+                <p>Delete Products</p>
+                <a href="{% url 'manage-products' %}" class="service-btn">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+    <div class="control">
+            <h1 class="not_authenticated">You are not Login !</h1>
+    </div>
+{% endif %}
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.control').css('padding-top', `${nav.clientHeight + 16}px`);
+// 
+</script>
+{% endblock %}

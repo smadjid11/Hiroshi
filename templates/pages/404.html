@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+    <title>Order</title>
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <h1>This Page Does't Exist</h1>
+</div>
+<script>
+// For White Background Navbar
+const nav = document.querySelector('nav');
+$('nav').css("background-color", "#fff");
+$('.this-order').css('padding-top', `${nav.clientHeight + 16}px`);
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% load static %}
+
+{% block content %}
+    <nav>
+        {% if user.is_authenticated %}
+            <a href="{% url 'control' %}" class="nav-btn" id="controll-btn">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <p>Control</p>
+            </a>
+            <a href="{% url 'home' %}" id="image-countainer"><img src="{% static 'images/hiroshi_logo.png' %}"></a>
+            <a href="{% url 'logout' %}" class="nav-btn" id="logout-btn">
+                <i class="fa-solid fa-right-from-bracket" style="rotate: 180deg"></i>
+                <p id="cart-length">Logout</p>
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-btn">
+                <i class="fa-solid fa-user"></i>
+                <p>Login</p>
+            </a>
+            <a href="{% url 'home' %}" id="image-countainer"><img src="{% static 'images/hiroshi_logo.png' %}"></a>
+            <a href="{% url 'cart' %}" class="nav-btn">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <p id="cart-length">Cart (<span>{{ cart_length }}</span>)</p>
+            </a>
+            
+        {% endif %}
+        
+    </nav>
+{% endblock %}
